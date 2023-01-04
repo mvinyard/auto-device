@@ -13,5 +13,5 @@ x = torch.randn([200, 50]).to(AutoDevice())
 ### Installation
 
 ```
-pip install auto-device
+pip install autodevice
 ```
