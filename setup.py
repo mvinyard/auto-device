@@ -1,9 +1,9 @@
-from setuptools import setup
+import setuptools
 import re
 import os
 import sys
 
-setup(
+setuptools.setup(
     name="auto-device",
     version="0.0.0",
     python_requires=">3.7.0",
