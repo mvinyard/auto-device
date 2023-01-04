@@ -1,4 +1,4 @@
-# auto-device
+# autodevice
 
 Automatically assign devices in-line with pytorch code
 
