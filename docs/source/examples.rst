@@ -11,21 +11,23 @@ Example notebooks
    
 .. grid:: 2
 
-    .. grid-item-card::  AutoDevice
+    .. grid-item-card:: ``autodevice.AutoDevice``
        :link: _notebooks/example.ipynb
        :text-align: right
 
-        Example Notebook
-        ^^^
+       Example Notebook
         
-        .. raw:: html
-            <embed><div><br></br></div></embed>
+       ^^^
+        
+       .. raw:: html
+        
+           <embed><div><br></br></div></embed>
             
-        :octicon:`sidebar-expand;2em;sd-text-dark`
+       :octicon:`sidebar-expand;2em;sd-text-dark`
         
-        +++
+       +++
         
-        .. raw:: html
+       .. raw:: html
        
           <embed>
              <div>

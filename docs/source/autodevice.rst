@@ -1,7 +1,8 @@
 
-=======================
-`autodevice.AutoDevice`
-=======================
+=========================
+``autodevice.AutoDevice``
+=========================
+
 
 .. automodule:: autodevice._autodevice
     :members:
@@ -10,6 +11,7 @@
     :special-members:
     :exclude-members:
     :member-order: bysource
+
     
 .. toctree::
    :maxdepth: 0
