@@ -7,9 +7,12 @@
     :members:
     :undoc-members:
     :show-inheritance:
+    :special-members:
+    :exclude-members:
+    :member-order: bysource
     
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 0
    :caption: Example notebook:
    
    _notebooks/example.ipynb
