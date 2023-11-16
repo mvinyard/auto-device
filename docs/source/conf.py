@@ -1,9 +1,23 @@
 
-# -- Project information ------------------------------------------------------
+# -- setup: -------------------------------------------------------------------
+import os
+import pathlib
+
 project = 'autodevice'
+
+cwd = pathlib.Path(os.getcwd())
+project_dir = cwd.parent.parent.joinpath(project)
+version_path = project_dir.joinpath("__version__.py")
+
+with open(version_path) as v:
+    exec(v.read()) # yields __version__
+
+
+# -- Project information ------------------------------------------------------
+
 copyright = '2023, Michael E. Vinyard'
 author = 'Michael E. Vinyard'
-release = '0.1.0rc0'
+release = __version__
 
 
 # -- General configuration: ---------------------------------------------------
@@ -27,6 +41,6 @@ html_static_path = ['_static']
 html_css_files = ['css/custom.css']
 
 html_theme_options = {
-    "github_url": "https://github.com/mvinyard/neural-diffeqs",
+    "github_url": "https://github.com/mvinyard/autodevice",
     "twitter_url": "https://twitter.com/vinyard_m",
 }
