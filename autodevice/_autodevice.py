@@ -1,77 +1,101 @@
+
 __module_name__ = "_autodevice.py"
-__doc__ = """To-do"""
 __author__ = "Michael E. Vinyard"
-__email__ = "mvinyard@broadinstitute.org"
+__email__ = "mvinyard.ai@gmail.com"
 
 
-# -- import packages: --------------------------------------------------------------------
+# -- import packages: ---------------------------------------------------------
+import ABCParse
 import torch
 
 
-# -- import / define types: --------------------------------------------------------------
-NoneType = type(None)
-from typing import Union
+# -- import local dependencies: -----------------------------------------------
+from ._available_devices import AvailableDevices
 
 
-# -- Functional class object: ------------------------------------------------------------
-class _AutoDevice:
-    def __init__(self, use_cpu=False, idx=None, *args, **kwargs):
+# -- set typing: --------------------------------------------------------------
+from typing import Optional, Union
 
-        self._use_cpu = use_cpu
-        self._idx = idx
 
-        if "cpu" in args:
-            self._use_cpu
+# -- operational class: -------------------------------------------------------
+class _AutoDevice(ABCParse.ABCParse):
+    def __init__(
+        self,
+        use_cpu: Optional[bool] = False,
+        idx: Optional[int] = None,
+        *args,
+        **kwargs,
+    ) -> None:
+        """Operational class to mediate device-handling.
 
-    def availability(self):
+        Args:
+            use_cpu (Optional[bool]): Description. Default = False.
 
-        self.has_cuda = torch.cuda.is_available()
-        self.has_mps = torch.backends.mps.is_available()
-        if not any([self.has_cuda, self.has_mps]):
+            idx (Optional[Union[int, None]]): Description. Default = None.
+
+        Returns:
+            None, class is instantiated.
+        """
+
+        self.__parse__(locals())
+
+        self.availability = AvailableDevices()
+
+    @property
+    def use_cpu(self):
+        """Flag meant to override auto-gpu assignment"""
+        # -- if cpu is a kwarg passed as: {"cpu": True}
+        if "cpu" in self._kwargs and self._kwargs["cpu"]:
             self._use_cpu = True
+        return self._use_cpu
 
-    def configure(self):
-        self.availability()
-
-        if self.has_mps:
-            self.device = torch.device("mps")
-        elif self.has_cuda:
-            if not self._idx:
+    @property
+    def gpu_idx(self):
+        """ """
+        if self.availability.cuda:
+            if self._idx is None:
                 self._idx = torch.cuda.current_device()
-            self.device = torch.device("cuda:{}".format(self._idx))
+            return self._idx
+        return None
 
-        else:
-            self.device = torch.device("cpu")
+    @property
+    def device(self) -> torch.device:
+        """determined torch device.
+        Returns:
+            device (torch.device): assigned device.
+        """
 
-    def __call__(self, *args, **kwargs):
-        self.configure(*args)
+        if self.use_cpu:
+            return torch.device("cpu")
 
-        if not self._use_cpu:
-            return self.device
-        else:
-            return self.device
+        if self.availability.mps:
+            return torch.device("mps")
+
+        if self.availability.cuda:
+            return torch.device(f"cuda:{self.gpu_idx}")
+
+        return torch.device("cpu")
 
 
-# -- API-facing function: ----------------------------------------------------------------
+# -- API-facing function: -----------------------------------------------------
 def AutoDevice(
-    use_cpu: bool = False, idx: Union[NoneType, int] = None, *args, **kwargs
-):
-    """
-    Parameters:
-    -----------
-    use_cpu
-        type: bool
-        default: False
+    use_cpu: Optional[bool] = False,
+    idx: Optional[Union[int, None]] = None,
+    *args,
+    **kwargs,
+) -> torch.device:
+    """API-facing function to mediate device-handling.
 
-    idx
-        type: Union[NoneType, int]
-        default: None
+    Args:
+        use_cpu (Optional[bool]): Description. Default = False.
+
+        idx (Optional[Union[int, None]]): Description. Default = None.
 
     Returns:
-    --------
-    device
-        type:
-            torch.device
+        device (torch.device): assigned device.
     """
 
-    return _AutoDevice(use_cpu=use_cpu, idx=idx, *args, **kwargs)()
+    auto_device = _AutoDevice(use_cpu=use_cpu, idx=idx, *args, **kwargs)
+    return auto_device.device
+
+
